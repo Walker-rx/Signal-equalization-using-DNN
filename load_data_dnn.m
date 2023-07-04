@@ -1,8 +1,8 @@
 %% Load data
 if data_loop == 1
     save_amp = [];
-    band_power = [];
-    bias_save = []; 
+    save_band_power = [];
+    save_bias = []; 
     bias_all = [];
 end
 xTrain_loop = [];  % received signal
@@ -30,8 +30,8 @@ for row_loop = 1:size(data_tmp,1)
         yTest_tmp = pilot_ori_load(trainNum+1:end);
 
         amp_loop = 32000*amp_folder;
-        save_amp = [ save_amp amp_loop ];
-        bias_save = [ bias_save bias_folder];
+        save_amp = [ save_amp amp_folder ];
+        save_bias = [ save_bias bias_folder];
         yTrain_tmp = cellfun(@(cell1)(cell1*amp_loop),yTrain_tmp,'UniformOutput',false);
         yTest_tmp = cellfun(@(cell1)(cell1*amp_loop),yTest_tmp,'UniformOutput',false);
 
@@ -57,7 +57,7 @@ norm_factor = gather(eval(strcat('norm_mat.',norm_names{1})));
 yTrain_loop = cellfun(@(cell1)(cell1*norm_factor),yTrain_loop,'UniformOutput',false);
 
 for i = 1:test_num
-    band_power = [band_power bandpower(yTrain_loop{2+(i-1)*trainNum})];
+    save_band_power = [save_band_power bandpower(yTrain_loop{2+(i-1)*trainNum})];
 end
 
 for i = 1:test_num
@@ -111,9 +111,6 @@ for i = 1:test_num
     eval([['yTest',num2str(i)],'= ytop_tem;']);
 end
 
-
-% xValidation = xTest1;
-% yValidation = yTest1;
 for i = 1:test_num
     xValidation_tem = eval(['xTest',num2str(i)]);
     yValidation_tem = eval(['yTest',num2str(i)]);
@@ -127,6 +124,5 @@ for i = 1:test_num
 end
 xTrain = [xTrain xTrain_loop];
 yTrain = [yTrain yTrain_loop];
-% xTrain = xTrain_loop;
-% yTrain = yTrain_loop;
+
 %%
