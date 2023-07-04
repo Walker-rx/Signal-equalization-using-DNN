@@ -173,7 +173,7 @@ for i = 1:length(bias_scope)
 end
 fprintf(save_parameter,"\r\n");
 % fprintf(save_parameter," data num = %d , split num = %d , train num = %d\r\n",total_cell,split_num,total_cell*split_num*train_percent);
-fprintf(save_parameter," data num = %d , no split , train num = %d\r\n",total_cell,total_cell*train_percent);
+fprintf(save_parameter," data num = %d , no split , train num = %d\r\n",total_data_num,total_data_num*train_percent);
 fprintf(save_parameter," validationFrequency is floor(numIterPerEpoch/4) \n");
 fprintf(save_parameter," origin rate = %e , receive rate = %e \n",ori_rate,rec_rate);
 fprintf(save_parameter," Equal order = %d \n",equal_order);
@@ -184,8 +184,8 @@ fclose(save_parameter);
 %%
 fprintf("\n Training end ..." + ... 
     "\n Threenonlinear , Train cell num = %d \n",...
-    total_cell);
-fprintf(" result saved in %s \n",savePath_mat);
+    total_data_num);
+fprintf(" result saved in %s \n",save_path);
 
 tEnd = toc(tStart);
 disp("Total using "+floor(tEnd/60)+"min "+mod(tEnd,60)+"s")
