@@ -21,13 +21,19 @@ for row_loop = 1:size(data_tmp,1)
         load_path = load_path_ini + "/data/"+ori_rate/1e6+"M/amp"+amp_folder+"/bias"+bias_folder+"/mat";
         fprintf(" %d looptimes , %d training times , load amp = %f , bias = %d , \n load begin = %d , load end = %d \n",...
             train_loop_time,train_time,amp_folder,bias_folder,load_begin,load_end);
-        load_data_pilot
-        totalNum = data_num;
+        % load_pilot
+        load_data
+        % totalNum = data_num;
+        totalNum = data_num*split_num;
         trainNum = floor(totalNum*train_percent);
-        xTrain_tmp = pilot_received_load(1:trainNum);
-        yTrain_tmp = pilot_ori_load(1:trainNum);
-        xTest_tmp = pilot_received_load(trainNum+1:end);
-        yTest_tmp = pilot_ori_load(trainNum+1:end);
+        % xTrain_tmp = pilot_received_load(1:trainNum);
+        % yTrain_tmp = pilot_ori_load(1:trainNum);
+        % xTest_tmp = pilot_received_load(trainNum+1:end);
+        % yTest_tmp = pilot_ori_load(trainNum+1:end);
+        xTrain_tmp = data_received_load(1:trainNum);
+        yTrain_tmp = data_ori_load(1:trainNum);
+        xTest_tmp = data_received_load(trainNum+1:end);
+        yTest_tmp = data_ori_load(trainNum+1:end);
 
         amp_loop = 32000*amp_folder;
         save_amp = [ save_amp amp_folder ];
@@ -75,7 +81,7 @@ for i = 1:numel(xTrain_loop)
         x_rate = [x_rate x_rate_loop];
     end
     xTrain_loop{i} = x_rate;
-%     xTrain_loop{i} = [xTrain_loop{i}; single( bias_loop_data(floor((i-1)/trainNum)+1) )*ones(1,size(xTrain_loop{i},2) )];
+    xTrain_loop{i} = [xTrain_loop{i}; single( bias_loop_data(floor((i-1)/trainNum)+1) )*ones(1,size(xTrain_loop{i},2) )];
     yTrain_loop{i} = reshape(yTrain_loop{i},outputSize,[]);
     % yTrain_loop{i} = yTrain_loop{i}(:,1:size(xTrain_loop{i},2));
     yTrain_loop{i} = yTrain_loop{i}(:,1:size(xTrain_loop{i},2)/rate_times);
@@ -97,7 +103,7 @@ for i = 1:test_num
             x_rate = [x_rate x_rate_loop];
         end
         xtop_tem{j} = x_rate;
-%         xtop_tem{j} = [xtop_tem{j}; single( bias_loop_data(i) )*ones(1,size(xtop_tem{j},2) )];
+        xtop_tem{j} = [xtop_tem{j}; single( bias_loop_data(i) )*ones(1,size(xtop_tem{j},2) )];
         ytop_tem{j} = reshape(ytop_tem{j},outputSize,[]);
         % ytop_tem{j} = ytop_tem{j}(:,1:size(xtop_tem{j},2));
         ytop_tem{j} = ytop_tem{j}(:,1:size(xtop_tem{j},2)/rate_times);

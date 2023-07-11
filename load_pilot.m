@@ -21,7 +21,7 @@ for name_order = load_begin:load_end
     upsample_norm(load_data_loop) = gather(eval(strcat('upsample_norm_mat.',upsample_norm_names{name_order})));
     pilot_ori = signal_ori(1:pilot_length);
     if headwindow*rate_times > fin_syn_point-1
-        signal_addzero = [ zeros(1,headwindow*times-(fin_syn_point-1)) , signal_received ];
+        signal_addzero = [ zeros(1,headwindow*rate_times-(fin_syn_point-1)) , signal_received ];
     else
         start_point = fin_syn_point - headwindow*rate_times;
         signal_addzero = signal_received(start_point:end);

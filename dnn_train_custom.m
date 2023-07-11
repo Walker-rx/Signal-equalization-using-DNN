@@ -13,6 +13,7 @@ function [ dlnet, velocity, losss, learnRate_save ] = dnn_train_custom(rate_time
 
     valid_loss = 50000;
     valid_num = 0;
+    valid_max = 100;
     XValidation(:,:,1) = xValidation;
     YValidation(:,:,1) = yValidation;
     dlXValidation = dlarray(single(XValidation),'CBT');
@@ -51,6 +52,9 @@ function [ dlnet, velocity, losss, learnRate_save ] = dnn_train_custom(rate_time
             end
             xTrain_final = cell2mat(xTrain_final);
             yTrain_final = cell2mat(yTrain_final);
+
+            xTrain_final = gpuArray(xTrain_final);
+            yTrain_final = gpuArray(yTrain_final);
             
             %% Training net
             X(:,:,1) = xTrain_final;
@@ -81,13 +85,13 @@ function [ dlnet, velocity, losss, learnRate_save ] = dnn_train_custom(rate_time
                 loss_validation = gather(extractdata(loss_validation));
                 if valid_loss <= loss_validation
                     valid_num = valid_num+1;
-                    fprintf(" valid num = %d , minimum loss = %e , valid num changed \n",valid_num,valid_loss);
+                    fprintf(" valid num = %d/%d , minimum loss = %e , valid num changed \n",valid_num,valid_max,valid_loss);
                 else
                     valid_loss = loss_validation;
-                    fprintf(" valid num = %d , minimum loss = %e , valid num not changed \n",valid_num,valid_loss);
+                    fprintf(" valid num = %d/%d , minimum loss = %e , valid num not changed \n",valid_num,valid_max,valid_loss);
                 end
             end
-            if valid_num == 100
+            if valid_num == valid_max
                 return
             end
         end

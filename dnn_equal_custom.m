@@ -2,7 +2,7 @@ clear
 close all
 tStart = tic;
 
-ver = 1;
+ver = 3;
 
 t = datetime('now');
 folder = '6.18';
@@ -11,17 +11,17 @@ rec_rate = 60e6;
 % load_path_ini = "/home/xliangseu/ruoxu/equalization-using-DNN/data_save/light_data_"+folder;
 load_path_ini = "/home/oem/Users/ruoxu/equalization-using-DNN/data_save/light_data_"+folder;
 save_path_ini = "data_save/light_data_"+folder;
-save_path = save_path_ini + "/dnn/"+t.Month+"."+t.Day+"/mix_bias_amp/Threenonlinear"+ver;   
+save_path = save_path_ini + "/result1/"+t.Month+"."+t.Day+"/mix_bias_amp/Threenonlinear"+ver;   
 
 if(~exist(save_path,'dir'))
     mkdir(char(save_path));
 end
 
 %% Network parameters
-% bias_scope = 0.05:0.04:0.85;
-% amp_scope_ini = [0.005 0.007 0.015 0.024 0.034 0.045 0.08 0.18 0.25 0.3];
-bias_scope = 0.45;
-amp_scope_ini = 0.18;
+bias_scope = 0.05:0.04:0.85;
+amp_scope_ini = [0.005 0.007 0.015 0.024 0.034 0.045 0.08 0.18 0.25 0.3 0.48082 0.64058 0.8003 1];
+% bias_scope = 0.45;
+% amp_scope_ini = 0.18;
 
 total_cell = 60;
 total_data_num = total_cell;
@@ -59,11 +59,13 @@ for train_loop_time = 1:total_loop_time
         equal_order = 30;
         headwindow = equal_order-(fix(equal_order/2)+1);
         rate_times = rec_rate/ori_rate;
-        add_zero = rate_times*equal_order/2;
+        % add_zero = rate_times*equal_order/2;
         pilot_length = 2047;
+        zero_length = 3000;
+        data_length = 10000;
         split_num = 10;
 
-        inputSize = equal_order;
+        inputSize = equal_order+1;
         outputSize = 1;
         hiddlayer_num = 4;
         maxEpochs = 60;
@@ -86,12 +88,13 @@ for train_loop_time = 1:total_loop_time
         yTrain = {};
 
         for data_loop = 1:numel(data)
-            load_data_dnn
+            load_dnn
         end
         
         %% Shuffling data
         xValidation_final = cell(1,rate_times);
         yValidation_final = cell(1,rate_times);
+
         colNum_perRate = size(xValidation{1},2)/rate_times;
         for i = 1:numel(xValidation)
             for j = 1:rate_times
@@ -178,7 +181,7 @@ fprintf(save_parameter," validationFrequency is floor(numIterPerEpoch/4) \n");
 fprintf(save_parameter," origin rate = %e , receive rate = %e \n",ori_rate,rec_rate);
 fprintf(save_parameter," Equal order = %d \n",equal_order);
 fprintf(save_parameter," Hidden Units = %d \n",numHiddenUnits);
-fprintf(save_parameter," Add zero num = %d(equal) \n",add_zero);
+% fprintf(save_parameter," Add zero num = %d(equal) \n",add_zero);
 fclose(save_parameter);
 
 %%
