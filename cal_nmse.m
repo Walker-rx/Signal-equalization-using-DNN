@@ -8,7 +8,7 @@ ori_rate = 30e6;
 rec_rate = 60e6;
 times = rec_rate/ori_rate;
 equal_order = 30;
-M = 2;
+M = 2;888
 
 bias_scope = 0.05:0.04:0.85;
 amp_scope = [0.005 0.007 0.015 0.024 0.034 0.045 0.08 0.18 0.25 0.3 0.48082 0.64058 0.8003 1];
