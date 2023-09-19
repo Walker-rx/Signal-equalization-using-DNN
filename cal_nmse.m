@@ -83,7 +83,6 @@ for bias_loop = 1:length(bias_scope)
         fclose(fser);
         fclose(fnmse);       
     end
-    
 end
 
 
